@@ -1,0 +1,19 @@
+{
+	"newcap": false,
+	"curly": true,
+	"eqnull": true,
+	"undef": true,
+	"browser": true,
+	"laxcomma": true,
+	"noarg": true,
+	"expr": true,
+	"latedef": true,
+	"immed": true,
+	"sub": true,
+	"globals": {
+		"$":true,
+		"jQuery": true,
+		"Module": true,
+		"console" : true		
+	}
+}

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Module Component</title>
+</head>
+<body>
+	
+	<div data-component="test" data-color="red">
+		<span data-element="field">1</span>	
+		<span data-element="field">2</span>
+		<span data-element="field">3</span>
+
+		<ul data-element="list">
+			<li>Filho</li>
+			<li>Pai</li>
+			<li>Neto</li>
+		</ul>
+
+		<button type="button" data-action="blink-list">Blink</button>
+		<button type="button" data-action="hide-list">Hide</button>
+		<button type="button" data-action="show-list">Show</button>
+	</div>
+
+	<div data-component="test" data-color="yellow" style="margin-top: 100px;">
+		<span data-element="field">1</span>	
+		<span data-element="field">2</span>
+
+		<ul data-element="list">
+			<li>Filho</li>
+			<li>Pai</li>
+			<li>Neto</li>
+		</ul>
+
+		<button type="button" data-action="blink-list">Blink</button>
+		<button type="button" data-action="hide-list">Hide</button>
+		<button type="button" data-action="show-list">Show</button>
+	</div>
+
+	<div data-component="test-2" data-extend="test" data-color="blue" style="margin-top: 100px;">
+		<span data-element="field">1</span>
+		<span data-element="field">2</span>
+		<span data-element="field">3</span>
+
+		<ul data-element="list">
+			<li>Filho</li>
+			<li>Pai</li>
+			<li>Neto</li>
+		</ul>
+
+		<button type="button" data-action="blink-list">Blink Double</button>
+		<button type="button" data-action="hide-list">Hide</button>
+		<button type="button" data-action="show-list">Show</button>
+	</div>	
+
+	<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+	<script src="dest/module.min.js"></script>
+	<script>
+		Module.ComponentWrapper( 'Test', function(Test) {
+
+			Test.fn.init = function() {
+				this.setBackground();
+				this.addEventListener();
+			};
+
+			Test.fn.addEventListener = function() {
+				this.addEvent( 'click', 'blink-list' );
+				this.addEvent( 'click', 'hide-list' );
+				this.addEvent( 'click', 'show-list' );
+			};
+
+			Test.fn.setBackground = function() {
+				this.elements.field.css( 'background', this.color );
+			};
+
+			Test.fn._onClickBlinkList = function() {
+				this.elements.list.fadeToggle().fadeToggle();
+			};
+
+			Test.fn._onClickHideList = function() {
+				this.elements.list.css( 'visibility', 'hidden' );
+			};
+
+			Test.fn._onClickShowList = function() {
+				this.elements.list.css( 'visibility', 'visible' );
+			};
+
+		});
+
+		Module.ComponentWrapper( 'Test2', function(Test2) {
+
+			Test2.overrides = [ '_onClickBlinkList' ];
+
+			Test2.fn._onClickBlinkList = function() {
+				this.elements.list.fadeToggle().fadeToggle().fadeToggle().fadeToggle();
+			};
+
+		});
+
+		Module.factory.create( $( 'body' ) );
+	</script>
+</body>
+</html>
