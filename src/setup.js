@@ -1,14 +1,14 @@
 ;(function(context) {
 
-	'use strict';
+    'use strict';
 
-	Module.setup = {
-		namespace : 'Example'
-	};
+    Module.setup = {
+        namespace : 'Example'
+    };
 
-	context[Module.setup.namespace] = {
-		Components : {},
-		Ajax       : {}
-	};
+    context[Module.setup.namespace] = {
+        Components : {},
+        Ajax       : {}
+    };
 
 })( window );
