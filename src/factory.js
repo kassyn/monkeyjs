@@ -1,63 +1,63 @@
 ;(function(context, $) {
 
-	'use strict';
-	
-	var components = ( context[Module.setup.namespace].Components || {} );
+    'use strict';
 
-	//define plugin js is exist
-	$.fn.isExist = function(selector, callback) {
-		var element = this.find( selector );
+    var components = ( context[Module.setup.namespace].Components || {} );
 
-		if ( element.length && typeof callback == 'function' ) {
-			callback.call( null, element, this );
-		}
+    //define plugin js is exist
+    $.fn.isExist = function(selector, callback) {
+        var element = this.find( selector );
 
-		return element.length;
-	};
+        if ( element.length && typeof callback == 'function' ) {
+            callback.call( null, element, this );
+        }
 
-	Module.factory = {
-		create : function(container) {
-			container.isExist( '[data-component]', this.constructor.bind( this ) );
-		},
+        return element.length;
+    };
 
-	    constructor : function(elements) {
-			elements.each( this.each.bind( this ) );
-		},
+    Module.factory = {
+        create : function(container) {
+            container.isExist( '[data-component]', this.constructor.bind( this ) );
+        },
 
-		extend : function(name, reflection) {
-			var mirror
-			  , method
-			;
+        constructor : function(elements) {
+            elements.each( this.each.bind( this ) );
+        },
 
-			if ( typeof components[name] != 'function' ) {
-				return;
-			}
+        extend : function(name, reflection) {
+            var mirror
+              , method
+            ;
 
-			mirror = components[name].fn;
+            if ( typeof components[name] != 'function' ) {
+                return;
+            }
 
-			for ( method in mirror ) {
-				if ( !~( reflection.overrides || [] ).indexOf( method ) ) {
-					reflection.fn[method] = mirror[method];
-				}
-			}
-		},
+            mirror = components[name].fn;
 
-	    each : function(index, target) {
-			var $el    = $( target )
-			  , extend = $el.data( 'extend' )
-			  , name   = Module.utils.toTitleCase( $el.data( 'component' ) )
-			;
+            for ( method in mirror ) {
+                if ( !~( reflection.overrides || [] ).indexOf( method ) ) {
+                    reflection.fn[method] = mirror[method];
+                }
+            }
+        },
 
-			if ( typeof components[name] != 'function' ) {
-				return;
-			}
+        each : function(index, target) {
+            var $el    = $( target )
+              , extend = $el.data( 'extend' )
+              , name   = Module.utils.toTitleCase( $el.data( 'component' ) )
+            ;
 
-			if ( extend ) {
-				this.extend( Module.utils.toTitleCase( extend ), components[name] );
-			}
+            if ( typeof components[name] != 'function' ) {
+                return;
+            }
 
-			components[name].call( null, $el );
-		}
-	};
+            if ( extend ) {
+                this.extend( Module.utils.toTitleCase( extend ), components[name] );
+            }
+
+            components[name].call( null, $el );
+        }
+    };
 
 })( window, jQuery );

@@ -1,79 +1,79 @@
 ;(function(context, $) {
 
-	'use strict';
+    'use strict';
 
-	// Build a new module with the correct attributes and methods.
-	function build() {
-		var Constructor, Instance;
+    // Build a new module with the correct attributes and methods.
+    function build() {
+        var Constructor, Instance;
 
-		Constructor = function() {
-			// Initialize a new instance, which won't do nothing but
-			// inheriting the prototype.
-			var instance = new Instance();
+        Constructor = function() {
+            // Initialize a new instance, which won't do nothing but
+            // inheriting the prototype.
+            var instance = new Instance();
 
-			// Apply the initializer on the given instance.
-			instance.initialize.apply(instance, arguments);
+            // Apply the initializer on the given instance.
+            instance.initialize.apply(instance, arguments);
 
-			return instance;
-		};
+            return instance;
+        };
 
-		// Define the function that will be used to
-		// initialize the instance.
-		Instance = function() {};
-		Instance.prototype = Constructor.prototype;
+        // Define the function that will be used to
+        // initialize the instance.
+        Instance = function() {};
+        Instance.prototype = Constructor.prototype;
 
-		// Save some typing and make an alias to the prototype.
-		Constructor.fn = Constructor.prototype;
+        // Save some typing and make an alias to the prototype.
+        Constructor.fn = Constructor.prototype;
 
-		// Define a noop initializer.
-		Constructor.fn.initialize = function() {};
+        // Define a noop initializer.
+        Constructor.fn.initialize = function() {};
 
-		return Constructor;
-	}
+        return Constructor;
+    }
 
-	var Module = function(namespace, callback, object, isGlobalScope) {
-		var components = namespace.split(/[.:]+/)
-		  , scope      = context
-		  , component
-		  , last
-		;
+    var Module = function(namespace, callback, object, isGlobalScope) {
+        var components = namespace.split(/[.:]+/)
+          , scope      = context
+          , component
+          , last
+        ;
 
-		if ( !isGlobalScope ) {
-			scope = scope[Module.setup.namespace] = ( scope[Module.setup.namespace] || {} );
-		}
+        if ( !isGlobalScope ) {
+            scope = scope[Module.setup.namespace] = ( scope[Module.setup.namespace] || {} );
+        }
 
-		if ( typeof callback !== 'function' ) {
-			object   = callback;
-			callback = null;
-		}
+        if ( typeof callback !== 'function' ) {
+            object   = callback;
+            callback = null;
+        }
 
-		object = object || build();
+        object = object || build();
 
-	    // Process all components but the last, which will store the
-	    // specified object attribute.
-    	for ( var i = 0, count = components.length; i < count; i++ ) {
-      		last = ( i == count - 1 );
-      		scope[components[i]] = ( last ? object : ( scope[components[i]] || {} ) );
-      		scope = scope[components[i]];
-    	}
+        // Process all components but the last, which will store the
+        // specified object attribute.
+        for ( var i = 0, count = components.length; i < count; i++ ) {
+            last = ( i == count - 1 );
+            scope[components[i]] = ( last ? object : ( scope[components[i]] || {} ) );
+            scope = scope[components[i]];
+        }
 
-    	if ( callback ) {
-      		callback.call( scope, scope, Module.utils, $ );
-    	}
+        if ( callback ) {
+            callback.call( scope, scope, Module.utils, $ );
+        }
 
-    	return scope;
-  	};	
+        return scope;
+    };
 
-	Module.Wrapper = function(namespace, initializer) {
-		return Module(namespace, function(definition) {
-			definition.fn.initialize = function(namespace, callback) {
-				initializer.apply( definition, arguments );
-			};
+    Module.Wrapper = function(namespace, initializer) {
+        return Module(namespace, function(definition) {
+            definition.fn.initialize = function(namespace, callback) {
+                initializer.apply( definition, arguments );
+            };
 
-			return definition;
-		}, null, true );
-	};
+            return definition;
+        }, null, true );
+    };
 
-	context.Module = Module;
+    context.Module = Module;
 
 })( window, jQuery );

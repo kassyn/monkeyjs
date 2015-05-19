@@ -1,95 +1,97 @@
 ;(function(context, $) {
 
-	'use strict';
+    'use strict';
 
-	// Build a new module with the correct attributes and methods.
-	function build() {
-		var Constructor, Instance;
+    // Build a new module with the correct attributes and methods.
+    function build() {
+        var Constructor, Instance;
 
-		Constructor = function() {
-			// Initialize a new instance, which won't do nothing but
-			// inheriting the prototype.
-			var instance = new Instance();
+        Constructor = function() {
+            // Initialize a new instance, which won't do nothing but
+            // inheriting the prototype.
+            var instance = new Instance();
 
-			// Apply the initializer on the given instance.
-			instance.initialize.apply(instance, arguments);
+            // Apply the initializer on the given instance.
+            instance.initialize.apply(instance, arguments);
 
-			return instance;
-		};
+            return instance;
+        };
 
-		// Define the function that will be used to
-		// initialize the instance.
-		Instance = function() {};
-		Instance.prototype = Constructor.prototype;
+        // Define the function that will be used to
+        // initialize the instance.
+        Instance = function() {};
+        Instance.prototype = Constructor.prototype;
 
-		// Save some typing and make an alias to the prototype.
-		Constructor.fn = Constructor.prototype;
+        // Save some typing and make an alias to the prototype.
+        Constructor.fn = Constructor.prototype;
 
-		// Define a noop initializer.
-		Constructor.fn.initialize = function() {};
+        // Define a noop initializer.
+        Constructor.fn.initialize = function() {};
 
-		return Constructor;
-	}
+        return Constructor;
+    }
 
-	var Module = function(namespace, callback, object, isGlobalScope) {
-		var components = namespace.split(/[.:]+/)
-		  , scope      = context
-		  , component
-		  , last
-		;
+    var Module = function(namespace, callback, object, isGlobalScope) {
+        var components = namespace.split(/[.:]+/)
+          , scope      = context
+          , component
+          , last
+        ;
 
-		if ( !isGlobalScope ) {
-			scope = scope[Module.setup.namespace] = ( scope[Module.setup.namespace] || {} );
-		}
+        if ( !isGlobalScope ) {
+            scope = scope[Module.setup.namespace] = ( scope[Module.setup.namespace] || {} );
+        }
 
-		if ( typeof callback !== 'function' ) {
-			object   = callback;
-			callback = null;
-		}
+        if ( typeof callback !== 'function' ) {
+            object   = callback;
+            callback = null;
+        }
 
-		object = object || build();
+        object = object || build();
 
-	    // Process all components but the last, which will store the
-	    // specified object attribute.
-    	for ( var i = 0, count = components.length; i < count; i++ ) {
-      		last = ( i == count - 1 );
-      		scope[components[i]] = ( last ? object : ( scope[components[i]] || {} ) );
-      		scope = scope[components[i]];
-    	}
+        // Process all components but the last, which will store the
+        // specified object attribute.
+        for ( var i = 0, count = components.length; i < count; i++ ) {
+            last = ( i == count - 1 );
+            scope[components[i]] = ( last ? object : ( scope[components[i]] || {} ) );
+            scope = scope[components[i]];
+        }
 
-    	if ( callback ) {
-      		callback.call( scope, scope, Module.utils, $ );
-    	}
+        if ( callback ) {
+            callback.call( scope, scope, Module.utils, $ );
+        }
 
-    	return scope;
-  	};	
+        return scope;
+    };
 
-	Module.Wrapper = function(namespace, initializer) {
-		return Module(namespace, function(definition) {
-			definition.fn.initialize = function(namespace, callback) {
-				initializer.apply( definition, arguments );
-			};
+    Module.Wrapper = function(namespace, initializer) {
+        return Module(namespace, function(definition) {
+            definition.fn.initialize = function(namespace, callback) {
+                initializer.apply( definition, arguments );
+            };
 
-			return definition;
-		}, null, true );
-	};
+            return definition;
+        }, null, true );
+    };
 
-	context.Module = Module;
+    context.Module = Module;
 
-})( window, jQuery );;;(function(context) {
+})( window, jQuery );
+;;(function(context) {
 
-  	'use strict';
-  	
-  	Module.setup = {
-		namespace : 'Example'		
-  	};
+    'use strict';
 
-  	context[Module.setup.namespace] = {
-  		Components : {},
-  		Ajax       : {}
-  	};
+    Module.setup = {
+        namespace : 'Example'
+    };
 
-})( window );;;(function(context, $) {
+    context[Module.setup.namespace] = {
+        Components : {},
+        Ajax       : {}
+    };
+
+})( window );
+;;(function(context, $) {
 
   	'use strict';
 
@@ -111,140 +113,142 @@
 		}
 	};
 
-})( window, jQuery );	;;(function(context, $) {
+})( window, jQuery );
+;;(function(context, $) {
 
-	'use strict';
-	
-	var components = ( context[Module.setup.namespace].Components || {} );
+    'use strict';
 
-	//define plugin js is exist
-	$.fn.isExist = function(selector, callback) {
-		var element = this.find( selector );
+    var components = ( context[Module.setup.namespace].Components || {} );
 
-		if ( element.length && typeof callback == 'function' ) {
-			callback.call( null, element, this );
-		}
+    //define plugin js is exist
+    $.fn.isExist = function(selector, callback) {
+        var element = this.find( selector );
 
-		return element.length;
-	};
+        if ( element.length && typeof callback == 'function' ) {
+            callback.call( null, element, this );
+        }
 
-	Module.factory = {
-		create : function(container) {
-			container.isExist( '[data-component]', this.constructor.bind( this ) );
-		},
+        return element.length;
+    };
 
-	    constructor : function(elements) {
-			elements.each( this.each.bind( this ) );
-		},
+    Module.factory = {
+        create : function(container) {
+            container.isExist( '[data-component]', this.constructor.bind( this ) );
+        },
 
-		extend : function(name, reflection) {
-			var mirror
-			  , method
-			;
+        constructor : function(elements) {
+            elements.each( this.each.bind( this ) );
+        },
 
-			if ( typeof components[name] != 'function' ) {
-				return;
-			}
+        extend : function(name, reflection) {
+            var mirror
+              , method
+            ;
 
-			mirror = components[name].fn;
+            if ( typeof components[name] != 'function' ) {
+                return;
+            }
 
-			for ( method in mirror ) {
-				if ( !~( reflection.overrides || [] ).indexOf( method ) ) {
-					reflection.fn[method] = mirror[method];
-				}
-			}
-		},
+            mirror = components[name].fn;
 
-	    each : function(index, target) {
-			var $el    = $( target )
-			  , extend = $el.data( 'extend' )
-			  , name   = Module.utils.toTitleCase( $el.data( 'component' ) )
-			;
+            for ( method in mirror ) {
+                if ( !~( reflection.overrides || [] ).indexOf( method ) ) {
+                    reflection.fn[method] = mirror[method];
+                }
+            }
+        },
 
-			if ( typeof components[name] != 'function' ) {
-				return;
-			}
+        each : function(index, target) {
+            var $el    = $( target )
+              , extend = $el.data( 'extend' )
+              , name   = Module.utils.toTitleCase( $el.data( 'component' ) )
+            ;
 
-			if ( extend ) {
-				this.extend( Module.utils.toTitleCase( extend ), components[name] );
-			}
+            if ( typeof components[name] != 'function' ) {
+                return;
+            }
 
-			components[name].call( null, $el );
-		}
-	};
+            if ( extend ) {
+                this.extend( Module.utils.toTitleCase( extend ), components[name] );
+            }
 
-})( window, jQuery );;Module.Wrapper( 'Module.ComponentWrapper', function(namespace, callback) {
+            components[name].call( null, $el );
+        }
+    };
 
-	'use strict';
-    
+})( window, jQuery );
+;Module.Wrapper( 'Module.ComponentWrapper', function(namespace, callback) {
+
+    'use strict';
+
     Module( ['Components', namespace].join( '.' ), function(Model, utils, $) {
-		Model.fn.initialize = function(container) {
-			this.$el      = container;
-			this.elements = {};
-			this.on       = null;
-			this.fire     = null;
-			
-			//start component
-			this.loadDefaultMethods();
-			this.init();
-		};
+        Model.fn.initialize = function(container) {
+            this.$el      = container;
+            this.elements = {};
+            this.on       = null;
+            this.fire     = null;
 
-		Model.fn.loadDefaultMethods = function() {
-      		this.setAttrs();
-      		this.setElements();
-      		this.emitter();
-    	};
+            //start component
+            this.loadDefaultMethods();
+            this.init();
+        };
 
-    	Model.fn.setElements = function() {
-    		this.$el
-    			.find( '[data-element]' )
-    				.each( this._assignEachElements.bind( this ) )
-    		;
-    	};
+        Model.fn.loadDefaultMethods = function() {
+            this.setAttrs();
+            this.setElements();
+            this.emitter();
+        };
 
-    	Model.fn._assignEachElements = function(index, element) {	    		
-			var target = $( element )
-			  ,	name   = utils.toCamelCase( target.data( 'element' ) )
-			;
+        Model.fn.setElements = function() {
+            this.$el
+                .find( '[data-element]' )
+                    .each( this._assignEachElements.bind( this ) )
+            ;
+        };
 
-			//case is exist element
-			if ( this.elements[name] ) {
-				this.elements[name] = this.elements[name].add( target );
-				return;
-			}
+        Model.fn._assignEachElements = function(index, element) {
+            var target = $( element )
+              , name   = utils.toCamelCase( target.data( 'element' ) )
+            ;
 
-			//set attr in object elements
-			this.elements[name] = target;	    		
-    	};
+            //case is exist element
+            if ( this.elements[name] ) {
+                this.elements[name] = this.elements[name].add( target );
+                return;
+            }
 
-    	Model.fn.setAttrs = function() {
-    		var attrs = this.$el.data();
+            //set attr in object elements
+            this.elements[name] = target;
+        };
 
-      		for ( var name in attrs ) {
-        		this[name] = attrs[name];
-      		}
-    	};
+        Model.fn.setAttrs = function() {
+            var attrs = this.$el.data();
 
-    	Model.fn.emitter = function() {
-			this.on   = $.proxy( this.$el, 'on' );
-			this.fire = $.proxy( this.$el, 'trigger' );
-    	};
+            for ( var name in attrs ) {
+                this[name] = attrs[name];
+            }
+        };
 
-    	Model.fn.addEvent = function(event, action) {
-    		var handle = utils.toCamelCase( [ '_on', event, action ].join( '-' ) );
+        Model.fn.emitter = function() {
+            this.on   = $.proxy( this.$el, 'on' );
+            this.fire = $.proxy( this.$el, 'trigger' );
+        };
 
-    		this.on(
-    			  event
-    			, '[data-action=' + action + ']'
-    			, ( this[handle] || $.noop ).bind( this )
-    		);
-    	};
+        Model.fn.addEvent = function(event, action) {
+            var handle = utils.toCamelCase( [ '_on', event, action ].join( '-' ) );
 
-    	Model.fn.init = function() {
+            this.on(
+                  event
+                , '[data-action=' + action + ']'
+                , ( this[handle] || $.noop ).bind( this )
+            );
+        };
 
-    	};
+        Model.fn.init = function() {
 
-		callback( Model, utils, $ );
-	});
+        };
+
+        callback( Model, utils, $ );
+    });
 
 });
