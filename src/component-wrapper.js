@@ -1,14 +1,14 @@
 Module.Wrapper( 'Module.ComponentWrapper', function(namespace, callback) {
 
 	'use strict';
-    
+
     Module( ['Components', namespace].join( '.' ), function(Model, utils, $) {
 		Model.fn.initialize = function(container) {
 			this.$el      = container;
 			this.elements = {};
 			this.on       = null;
 			this.fire     = null;
-			
+
 			//start component
 			this.loadDefaultMethods();
 			this.init();
@@ -27,7 +27,7 @@ Module.Wrapper( 'Module.ComponentWrapper', function(namespace, callback) {
     		;
     	};
 
-    	Model.fn._assignEachElements = function(index, element) {	    		
+    	Model.fn._assignEachElements = function(index, element) {
 			var target = $( element )
 			  ,	name   = utils.toCamelCase( target.data( 'element' ) )
 			;
@@ -39,7 +39,7 @@ Module.Wrapper( 'Module.ComponentWrapper', function(namespace, callback) {
 			}
 
 			//set attr in object elements
-			this.elements[name] = target;	    		
+			this.elements[name] = target;
     	};
 
     	Model.fn.setAttrs = function() {
