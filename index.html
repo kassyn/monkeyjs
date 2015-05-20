@@ -6,14 +6,15 @@
 </head>
 <body>
 
-	<div data-component="example" data-color="red">
+    <div data-component="example" data-color="red">
         <span data-element="field">My Element</span>
         <button type="button" data-action="change-color">Set Color</button>
     </div>
 
 	<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
 	<script src="dest/module.min.js"></script>
-	<script>
+
+    <script>
         Module.ComponentWrapper( 'Example', function(Example) {
 
             Example.fn.init = function() {
