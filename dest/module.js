@@ -82,7 +82,7 @@
     'use strict';
 
     Module.setup = {
-        namespace : 'Example'
+        namespace : 'MONKEY'
     };
 
     context[Module.setup.namespace] = {
