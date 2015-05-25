@@ -38,7 +38,7 @@ Module.ComponentWrapper( 'Example', function(Example) {
 Module.factory.create( $( 'body' ) );
 ```
 
-### You also check the [wiki](https://github.com/kassyn/monkeyjs/wiki).
+#### You also check the [wiki](https://github.com/kassyn/monkeyjs/wiki).
 
 ## Contributing
 1. Fork it!
