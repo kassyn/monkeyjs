@@ -208,8 +208,17 @@
 
         Model.fn._assignEachElements = function(index, element) {
             var target = $( element )
-              , name   = utils.toCamelCase( target.data( 'element' ) )
+              , name   = target.data( 'element' )
             ;
+
+            this._insertElement( target, name );
+        };
+
+        Model.fn._insertElement = function(target, name) {
+            name = utils.toCamelCase( name );
+
+            //ser flag for captured element
+            target.attr( 'data-eobj', true );
 
             //case is exist element
             if ( this.elements[name] ) {
@@ -219,6 +228,24 @@
 
             //set attr in object elements
             this.elements[name] = target;
+        };
+
+        Model.fn.reloadElements = function() {
+            this.$el
+                .find( '[data-element]:not([data-eobj])' )
+                    .each( this._assignEachElements.bind( this ) )
+            ;
+        };
+
+        Model.fn.getElement = function(name) {
+            var target = this.$el.find( '[data-element="' + name + '"]' );
+
+            if ( !target.length ) {
+                return false;
+            }
+
+            this._insertElement( target, name );
+            return target;
         };
 
         Model.fn.setAttrs = function() {
@@ -239,7 +266,7 @@
 
             this.on(
                   event
-                , '[data-action=' + action + ']'
+                , '[data-action="' + action + '"]'
                 , ( this[handle] || $.noop ).bind( this )
             );
         };
