@@ -38,6 +38,8 @@ Module.ComponentWrapper( 'Example', function(Example) {
 Module.factory.create( $( 'body' ) );
 ```
 
+#### You also check the [wiki](https://github.com/kassyn/monkeyjs/wiki).
+
 ## Contributing
 1. Fork it!
 2. Create your feature branch: `git checkout -b my-new-feature`
