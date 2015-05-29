@@ -46,6 +46,7 @@
             var $el    = $( target )
               , extend = $el.data( 'extend' )
               , name   = Module.utils.toTitleCase( $el.data( 'component' ) )
+              , instance
             ;
 
             if ( typeof components[name] != 'function' ) {
@@ -56,7 +57,8 @@
                 this.extend( Module.utils.toTitleCase( extend ), components[name] );
             }
 
-            components[name].call( null, $el );
+            instance = components[name].call( null, $el );
+            $el.data( '_component', instance );
         }
     };
 
