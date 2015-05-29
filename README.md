@@ -15,7 +15,6 @@ Define namespaces for implementation of simple components. This project is in it
 
 ```js
 Module.ComponentWrapper( 'Example', function(Example) {
-
     Example.fn.init = function() {
         this.addEventListener();
     };
@@ -31,7 +30,6 @@ Module.ComponentWrapper( 'Example', function(Example) {
     Example.fn._onClickChangeColor = function() {
         this.setBackground();
     };
-
 });
 
 //start components in application
