@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Instagram Feeds</title>
+    <style>
+        @import url(http://fonts.googleapis.com/css?family=Montserrat:400,700);
+
+        html, body, div, span, applet, object, iframe,
+        h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+        a, abbr, acronym, address, big, cite, code,
+        del, dfn, em, img, ins, kbd, q, s, samp,
+        small, strike, strong, sub, sup, tt, var,
+        b, u, i, center,
+        dl, dt, dd, ol, ul, li,
+        fieldset, form, label, legend,
+        table, caption, tbody, tfoot, thead, tr, th, td,
+        article, aside, canvas, details, embed, 
+        figure, figcaption, footer, header, hgroup, 
+        menu, nav, output, ruby, section, summary,
+        time, mark, audio, video {
+            margin: 0;
+            padding: 0;
+            border: 0;
+            font-size: 100%;
+            font: inherit;
+            vertical-align: baseline;
+        }
+        /* HTML5 display-role reset for older browsers */
+        article, aside, details, figcaption, figure, 
+        footer, header, hgroup, menu, nav, section {
+            display: block;
+        }
+        body {
+            line-height: 1;
+        }
+        ol, ul {
+            list-style: none;
+        }
+        blockquote, q {
+            quotes: none;
+        }
+        blockquote:before, blockquote:after,
+        q:before, q:after {
+            content: '';
+            content: none;
+        }
+        table {
+            border-collapse: collapse;
+            border-spacing: 0;
+        }
+
+        body {          
+            font-family: "Montserrat", sans-serif;
+        }
+
+        .list {
+            overflow: hidden;
+        }
+        .photo-header {
+            margin-bottom: 10px;
+        }
+        .card-feed {
+            background: #F0F0F0;
+            width: 290px;
+            border-radius: 2px;
+            border-bottom: 1px solid #ccc;
+            padding: 10px;
+            float: left;
+            margin: 10px;           
+        }
+        .photo-avatar {
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 10px;
+        }
+        .photo-avatar img {
+            border-radius: 100%;
+        }
+        .user-name {
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .thumbnail img {
+            width: 100%;            
+        }
+        .search-text {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px;
+        }
+        .button {
+            background: #050DA1;
+            border: 0;
+            font-family: "Montserrat", sans-serif;
+            color: #fff;
+            text-transform: uppercase;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div data-component="feeds" data-count="12" data-token="1428594783.7e0398e.0401379857454f848f68e1fb1ae8967e">
+        <input type="text" class="search-text" placeholder="insert your hashtag" data-element="text">
+        <button type="button" class="button" data-element="search" data-action="search">get feeds</button>
+        <div data-element="list-wrapper" class="list">
+        </div>
+    </div>
+
+    <script id="feeds-template" type="text/x-handlebars-template">
+        {{#each data}}
+        <div class="card-feed">
+            <header class="photo-header">
+                <figure class="photo-avatar">
+                    <img src="{{user.profile_picture}}" alt="imagem de avatar" width="50">
+                </figure>
+                <h2 class="user-name">{{user.username}}</h2>
+            </header>
+
+            <figure class="thumbnail">
+                <img src="{{images.standard_resolution.url}}" alt="">
+            </figure>
+        </div>
+        {{/each}}
+    </script>
+
+    <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="libs/handlebars.js"></script>
+    <script src="../dest/module.min.js"></script>
+    <script>
+        Module.ComponentWrapper( 'Feeds', function(Feeds) {
+            Feeds.fn.init = function() {
+                this.template = null;
+                this.load();
+            };
+
+            Feeds.fn.load = function() {
+                this.compileTemplate();
+                this.addEventListener();
+            };
+
+            Feeds.fn.compileTemplate = function() {
+                this.template = Handlebars.compile( $( '#feeds-template' ).html() );
+            };
+
+            Feeds.fn.addEventListener = function() {
+                this.addEvent( 'click', 'search' );
+            };
+
+            Feeds.fn._onClickSearch = function() {
+                var value = this.elements.text.val();
+
+                if ( value ) {
+                    this.getListByTag( value );
+                }
+            };
+
+            Feeds.fn.getListByTag = function(hashtag) {
+                var ajax = $.ajax({
+                    url        : 'https://api.instagram.com/v1/tags/' + hashtag + '/media/recent',
+                    dataType   : 'jsonp',
+                    success    : $.proxy( this, '_onSuccess' ),
+                    beforeSend : $.proxy( this, '_onBeforeSend' ),
+                    data       : {
+                        access_token : this.token,
+                        count        : this.count
+                    },
+                });
+            };
+
+            Feeds.fn._onSuccess = function(response) {
+                this.elements.listWrapper.html( this.template( response ) );
+                this.elements.search.text( 'get feeds' );
+            };
+
+            Feeds.fn._onBeforeSend = function() {
+                this.elements.search.text( 'wait...' );
+            };
+        });
+
+        Module.factory.create( $( 'body' ) );
+    </script>
+</body>
+</html>
