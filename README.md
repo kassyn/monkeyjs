@@ -3,8 +3,8 @@ MonkeyJS
 Define namespaces for implementation of simple components. This project is in its ideal create a **simple** javascript framework for building **applications**.
 
 ## Dependencies
-* [jQuery](http://jquery.com/) ( >= 1.11.0) or (>= 2.1.0)
-* [Zepto](http://zeptojs.com/) ( >= 1.1.6) it is required include [data.js](https://github.com/madrobby/zepto/blob/master/src/data.js)
+* [jQuery](http://jquery.com/) (>= 1.11.0) or (>= 2.1.0)
+* [Zepto](http://zeptojs.com/) (>= 1.1.6) it is required include [data.js](https://github.com/madrobby/zepto/blob/master/src/data.js)
 
 ## Usage
 ```html
