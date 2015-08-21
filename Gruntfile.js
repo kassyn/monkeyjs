@@ -11,8 +11,9 @@ module.exports = function(grunt) {
 					'src/base.js',
 					'src/setup.js',
 					'src/utils.js',
+					'src/dispatcher.js',
 					'src/factory.js',
-					'src/component-wrapper.js'
+					'src/component-wrapper.js'					
 				],
 				dest : 'dest/module.js',
 		    },
