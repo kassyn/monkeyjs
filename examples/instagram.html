@@ -128,7 +128,7 @@
     <script src="libs/handlebars.js"></script>
     <script src="../dest/module.min.js"></script>
     <script>
-        Module.ComponentWrapper( 'Feeds', function(Feeds) {
+        MONKEY.ComponentWrapper( 'Feeds', function(Feeds) {
             Feeds.fn.init = function() {
                 this.template = null;
                 this.load();
@@ -178,7 +178,7 @@
             };
         });
 
-        Module.factory.create( $( 'body' ) );
+        MONKEY.factory.create( $( 'body' ) );
     </script>
 </body>
 </html>
