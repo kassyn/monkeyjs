@@ -1,8 +1,8 @@
-Module.Wrapper( 'Module.ComponentWrapper', function(namespace, callback) {
+MONKEY.Wrapper( 'MONKEY.ComponentWrapper', function(namespace, callback) {
 
     'use strict';
 
-    Module( ['Components', namespace].join( '.' ), function(Model, utils, $) {
+    MONKEY( ['Components', namespace].join( '.' ), function(Model, utils, $) {
         Model.fn.initialize = function(container) {
             this.$el      = container;
             this.elements = {};

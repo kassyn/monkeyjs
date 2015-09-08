@@ -1,4 +1,9 @@
-;(function(context, $) {
+;(function(factory) {
+	if ( typeof window.MONKEY != 'function' ) {
+		factory( jQuery || Zepto );
+	}
+}(function(LibraryDOM) {
+(function(context, $) {
 
     'use strict';
 
@@ -12,7 +17,7 @@
             var instance = new Instance();
 
             // Apply the initializer on the given instance.
-            instance.initialize.apply(instance, arguments);
+            instance.initialize.apply( instance, arguments );
 
             return instance;
         };
@@ -31,7 +36,7 @@
         return Constructor;
     }
 
-    var Module = function(namespace, callback, object, isGlobalScope) {
+    var MONKEY = function(namespace, callback, object, isGlobalScope) {
         var components = namespace.split(/[.:]+/)
           , scope      = context
           , component
@@ -39,7 +44,7 @@
         ;
 
         if ( !isGlobalScope ) {
-            scope = scope[Module.setup.namespace] = ( scope[Module.setup.namespace] || {} );
+            scope = scope.MONKEY = scope.MONKEY || {};
         }
 
         if ( typeof callback !== 'function' ) {
@@ -58,14 +63,14 @@
         }
 
         if ( callback ) {
-            callback.call( scope, scope, Module.utils, $ );
+            callback.call( scope, scope, MONKEY.utils, $ );
         }
 
         return scope;
     };
 
-    Module.Wrapper = function(namespace, initializer) {
-        return Module(namespace, function(definition) {
+    MONKEY.Wrapper = function(namespace, initializer) {
+        return MONKEY(namespace, function(definition) {
             definition.fn.initialize = function(namespace, callback) {
                 initializer.apply( definition, arguments );
             };
@@ -74,28 +79,22 @@
         }, null, true );
     };
 
-    context.Module = Module;
+    context.MONKEY = MONKEY;
 
-})( window, jQuery );
-;;(function(context) {
+})( window, LibraryDOM );
+;(function(context) {
 
     'use strict';
 
-    Module.setup = {
-        namespace : 'MONKEY'
-    };
-
-    context[Module.setup.namespace] = {
-        Components : {},
-        Ajax       : {}
-    };
+    MONKEY.Components = {};
+    MONKEY.Ajax       = {};
 
 })( window );
-;;(function(context, $) {
+;(function(context, $) {
 
     'use strict';
 
-    Module.utils = {
+    MONKEY.utils = {
         toTitleCase : function(text) {
             text = text.replace(/(?:^|-)\w/g, function(match) {
                 return match.toUpperCase();
@@ -113,8 +112,8 @@
         }
     };
 
-})( window, jQuery );
-;;(function(context) {
+})( window, LibraryDOM );
+;(function(context) {
 
 	'use strict';
 
@@ -124,18 +123,18 @@
 		}
 	}
 
-	Module.dispatcher = function(application, route, args) {
+	MONKEY.dispatcher = function(application, route, args) {
 		//execute all application
 		call( application.init, args );
 		call( application[route], args );
 	};
 
 })( window );
-;;(function(context, $) {
+;(function(context, $) {
 
     'use strict';
 
-    var components = ( context[Module.setup.namespace].Components || {} );
+    var components = MONKEY.Components || {};
 
     //define plugin js is exist
     $.fn.isExist = function(selector, callback) {
@@ -148,7 +147,11 @@
         return element.length;
     };
 
-    Module.factory = {
+    $.fn.getComponent = function() {
+        return this.data( '_component' );
+    };
+
+    MONKEY.factory = {
         create : function(container) {
             container.isExist( '[data-component]', this.constructor.bind( this ) );
         },
@@ -176,10 +179,10 @@
         },
 
         each : function(index, target) {
-            var $el    = $( target )
-              , extend = $el.data( 'extend' )
-              , name   = Module.utils.toTitleCase( $el.data( 'component' ) )
-              , instance
+            var $el       = $( target )
+              , extend    = $el.data( 'extend' )
+              , name      = MONKEY.utils.toTitleCase( $el.data( 'component' ) )
+              , instance  = null
             ;
 
             if ( typeof components[name] != 'function' ) {
@@ -187,7 +190,7 @@
             }
 
             if ( extend ) {
-                this.extend( Module.utils.toTitleCase( extend ), components[name] );
+                this.extend( MONKEY.utils.toTitleCase( extend ), components[name] );
             }
 
             instance = components[name].call( null, $el );
@@ -195,12 +198,12 @@
         }
     };
 
-})( window, jQuery );
-;Module.Wrapper( 'Module.ComponentWrapper', function(namespace, callback) {
+})( window, LibraryDOM );
+;MONKEY.Wrapper( 'MONKEY.ComponentWrapper', function(namespace, callback) {
 
     'use strict';
 
-    Module( ['Components', namespace].join( '.' ), function(Model, utils, $) {
+    MONKEY( ['Components', namespace].join( '.' ), function(Model, utils, $) {
         Model.fn.initialize = function(container) {
             this.$el      = container;
             this.elements = {};
@@ -298,3 +301,4 @@
     });
 
 });
+}));

@@ -1,14 +1,8 @@
-;(function(context) {
+(function(context) {
 
     'use strict';
 
-    Module.setup = {
-        namespace : 'MONKEY'
-    };
-
-    context[Module.setup.namespace] = {
-        Components : {},
-        Ajax       : {}
-    };
+    MONKEY.Components = {};
+    MONKEY.Ajax       = {};
 
 })( window );

@@ -1,8 +1,8 @@
-;(function(context, $) {
+(function(context, $) {
 
     'use strict';
 
-    Module.utils = {
+    MONKEY.utils = {
         toTitleCase : function(text) {
             text = text.replace(/(?:^|-)\w/g, function(match) {
                 return match.toUpperCase();
@@ -20,4 +20,4 @@
         }
     };
 
-})( window, jQuery );
+})( window, LibraryDOM );

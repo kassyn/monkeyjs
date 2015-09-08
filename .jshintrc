@@ -11,9 +11,12 @@
 	"immed": true,
 	"sub": true,
 	"globals": {
-		"$":true,
+		"$": true,
+		"LibraryDOM": true,
 		"jQuery": true,
+		"Zepto": true,
 		"Module": true,
-		"console" : true		
+		"console": true,
+		"MONKEY": true
 	}
 }

@@ -15,7 +15,7 @@
     <script src="dest/module.min.js"></script>
 
     <script>
-        Module.ComponentWrapper( 'Example', function(Example) {
+        MONKEY.ComponentWrapper( 'Example', function(Example) {
             Example.fn.init = function() {
                 this.addEventListener();
             };
@@ -34,7 +34,7 @@
         });
 
         //start components in application
-        Module.factory.create( $( 'body' ) );
+        MONKEY.factory.create( $( 'body' ) );
     </script>
 </body>
 </html>

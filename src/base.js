@@ -1,4 +1,4 @@
-;(function(context, $) {
+(function(context, $) {
 
     'use strict';
 
@@ -12,7 +12,7 @@
             var instance = new Instance();
 
             // Apply the initializer on the given instance.
-            instance.initialize.apply(instance, arguments);
+            instance.initialize.apply( instance, arguments );
 
             return instance;
         };
@@ -31,7 +31,7 @@
         return Constructor;
     }
 
-    var Module = function(namespace, callback, object, isGlobalScope) {
+    var MONKEY = function(namespace, callback, object, isGlobalScope) {
         var components = namespace.split(/[.:]+/)
           , scope      = context
           , component
@@ -39,7 +39,7 @@
         ;
 
         if ( !isGlobalScope ) {
-            scope = scope[Module.setup.namespace] = ( scope[Module.setup.namespace] || {} );
+            scope = scope.MONKEY = scope.MONKEY || {};
         }
 
         if ( typeof callback !== 'function' ) {
@@ -58,14 +58,14 @@
         }
 
         if ( callback ) {
-            callback.call( scope, scope, Module.utils, $ );
+            callback.call( scope, scope, MONKEY.utils, $ );
         }
 
         return scope;
     };
 
-    Module.Wrapper = function(namespace, initializer) {
-        return Module(namespace, function(definition) {
+    MONKEY.Wrapper = function(namespace, initializer) {
+        return MONKEY(namespace, function(definition) {
             definition.fn.initialize = function(namespace, callback) {
                 initializer.apply( definition, arguments );
             };
@@ -74,6 +74,6 @@
         }, null, true );
     };
 
-    context.Module = Module;
+    context.MONKEY = MONKEY;
 
-})( window, jQuery );
+})( window, LibraryDOM );

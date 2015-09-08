@@ -1,4 +1,4 @@
-;(function(context) {
+(function(context) {
 
 	'use strict';
 
@@ -8,7 +8,7 @@
 		}
 	}
 
-	Module.dispatcher = function(application, route, args) {
+	MONKEY.dispatcher = function(application, route, args) {
 		//execute all application
 		call( application.init, args );
 		call( application[route], args );

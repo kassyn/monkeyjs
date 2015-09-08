@@ -1,8 +1,8 @@
-;(function(context, $) {
+(function(context, $) {
 
     'use strict';
 
-    var components = ( context[Module.setup.namespace].Components || {} );
+    var components = MONKEY.Components || {};
 
     //define plugin js is exist
     $.fn.isExist = function(selector, callback) {
@@ -15,7 +15,11 @@
         return element.length;
     };
 
-    Module.factory = {
+    $.fn.getComponent = function() {
+        return this.data( '_component' );
+    };
+
+    MONKEY.factory = {
         create : function(container) {
             container.isExist( '[data-component]', this.constructor.bind( this ) );
         },
@@ -43,10 +47,10 @@
         },
 
         each : function(index, target) {
-            var $el    = $( target )
-              , extend = $el.data( 'extend' )
-              , name   = Module.utils.toTitleCase( $el.data( 'component' ) )
-              , instance
+            var $el       = $( target )
+              , extend    = $el.data( 'extend' )
+              , name      = MONKEY.utils.toTitleCase( $el.data( 'component' ) )
+              , instance  = null
             ;
 
             if ( typeof components[name] != 'function' ) {
@@ -54,7 +58,7 @@
             }
 
             if ( extend ) {
-                this.extend( Module.utils.toTitleCase( extend ), components[name] );
+                this.extend( MONKEY.utils.toTitleCase( extend ), components[name] );
             }
 
             instance = components[name].call( null, $el );
@@ -62,4 +66,4 @@
         }
     };
 
-})( window, jQuery );
+})( window, LibraryDOM );

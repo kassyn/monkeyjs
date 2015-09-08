@@ -4,6 +4,12 @@ module.exports = function(grunt) {
 
 		concat : {
 		    options : {
+				banner : ';(function(factory) {\n'
+                       + '	if ( typeof window.MONKEY != \'function\' ) {\n'
+                       + '		factory( jQuery || Zepto );\n'
+                       + '	}\n'
+					   + '}(function(LibraryDOM) {\n',
+				footer : '}));',
 				separator : ';'
 		    },
 		    site : {
