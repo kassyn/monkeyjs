@@ -15,7 +15,7 @@ Define namespaces for implementation of simple components. This project is in it
 ```
 
 ```js
-Module.ComponentWrapper( 'Example', function(Example) {
+MONKEY.ComponentWrapper( 'Example', function(Example) {
     Example.fn.init = function() {
         this.addEventListener();
     };
@@ -34,7 +34,7 @@ Module.ComponentWrapper( 'Example', function(Example) {
 });
 
 //start components in application
-Module.factory.create( $( 'body' ) );
+MONKEY.factory.create( $( 'body' ) );
 ```
 
 #### You also check the [wiki](https://github.com/kassyn/monkeyjs/wiki).
