@@ -1,13 +1,17 @@
 MONKEY.Wrapper( 'MONKEY.ComponentWrapper', function(namespace, callback) {
 
-    'use strict';
+    'use strict';    
 
     MONKEY( ['Components', namespace].join( '.' ), function(Model, utils, $) {
+        
+        var global = $( 'body' );
+
         Model.fn.initialize = function(container) {
             this.$el      = container;
             this.elements = {};
             this.on       = null;
             this.fire     = null;
+            this.parent   = null;
 
             //start component
             this.loadDefaultMethods();
@@ -17,6 +21,7 @@ MONKEY.Wrapper( 'MONKEY.ComponentWrapper', function(namespace, callback) {
         Model.fn.loadDefaultMethods = function() {
             this.setAttrs();
             this.setElements();
+            this.setParent();
             this.emitter();
         };
 
@@ -58,8 +63,16 @@ MONKEY.Wrapper( 'MONKEY.ComponentWrapper', function(namespace, callback) {
             ;
         };
 
-        Model.fn.getElement = function(name) {
-            var target = this.$el.find( '[data-element="' + name + '"]' );
+        Model.fn.getElement = function(name, isGlobalWrapper) {
+            var wrapper = this.$el
+              , target  = null
+            ;
+            
+            if ( isGlobalWrapper ) {
+                wrapper = global;
+            }
+
+            target = wrapper.find( '[data-element="' + name + '"]' );
 
             if ( !target.length ) {
                 return false;
@@ -82,14 +95,26 @@ MONKEY.Wrapper( 'MONKEY.ComponentWrapper', function(namespace, callback) {
             this.fire = $.proxy( this.$el, 'trigger' );
         };
 
-        Model.fn.addEvent = function(event, action) {
-            var handle = utils.toCamelCase( [ '_on', event, action ].join( '-' ) );
-
-            this.on(
+        Model.fn.addEvent = function(event, action, isGlobalEvent) {
+            var handle  = utils.toCamelCase( [ '_on', event, action ].join( '-' ) )
+              , context = isGlobalEvent ? global : this
+            ;
+            
+            context.on(
                   event
                 , '[data-action="' + action + '"]'
-                , ( this[handle] || $.noop ).bind( this )
+                , $.proxy( this, 'onHandleEvent', handle )
             );
+        };
+
+        Model.fn.onHandleEvent = function(handle, event) {
+            ( this[handle] || $.noop ).call( this, event, $( event.currentTarget ) );
+        };
+
+        Model.fn.setParent = function() {
+            if ( this.depends ) {
+                this.parent = $( '[data-component="' + this.depends + '"]' ).getComponent();
+            }
         };
 
         Model.fn.init = function() {

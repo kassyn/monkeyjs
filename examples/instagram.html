@@ -103,8 +103,7 @@
     <div data-component="feeds" data-count="12" data-token="1428594783.7e0398e.0401379857454f848f68e1fb1ae8967e">
         <input type="text" class="search-text" placeholder="insert your hashtag" data-element="text">
         <button type="button" class="button" data-element="search" data-action="search">get feeds</button>
-        <div data-element="list-wrapper" class="list">
-        </div>
+        <div data-element="list-wrapper" class="list"></div>
     </div>
 
     <script id="feeds-template" type="text/x-handlebars-template">
@@ -126,7 +125,7 @@
 
     <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
     <script src="libs/handlebars.js"></script>
-    <script src="../dest/module.min.js"></script>
+    <script src="../dest/monkey.min.js"></script>
     <script>
         MONKEY.ComponentWrapper( 'Feeds', function(Feeds) {
             Feeds.fn.init = function() {

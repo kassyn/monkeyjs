@@ -21,7 +21,7 @@ module.exports = function(grunt) {
 					'src/factory.js',
 					'src/component-wrapper.js'					
 				],
-				dest : 'dest/module.js',
+				dest : 'dest/monkey.js',
 		    },
   		},
 
@@ -35,7 +35,7 @@ module.exports = function(grunt) {
   		uglify : {
 			site : {
 				files : {
-					'dest/module.min.js' : '<%= concat.site.dest %>'
+					'dest/monkey.min.js' : '<%= concat.site.dest %>'
 				}
 			}
     	},    	

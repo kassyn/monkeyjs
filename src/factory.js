@@ -21,10 +21,16 @@
 
     MONKEY.factory = {
         create : function(container) {
-            container.isExist( '[data-component]', this.constructor.bind( this ) );
+            this.container = container;
+            this.set( '[data-component]:not([data-depends],[data-cobj])' );
+        },
+
+        set : function(selector) {
+            this.container.isExist( selector, this.constructor.bind( this ) );
         },
 
         constructor : function(elements) {
+            console.log( elements );
             elements.each( this.each.bind( this ) );
         },
 
@@ -47,10 +53,10 @@
         },
 
         each : function(index, target) {
-            var $el       = $( target )
-              , extend    = $el.data( 'extend' )
-              , name      = MONKEY.utils.toTitleCase( $el.data( 'component' ) )
-              , instance  = null
+            var $el    = $( target )
+              , extend = $el.data( 'extend' )
+              , behalf = $el.data( 'component' )
+              , name   = MONKEY.utils.toTitleCase( behalf )
             ;
 
             if ( typeof components[name] != 'function' ) {
@@ -61,8 +67,15 @@
                 this.extend( MONKEY.utils.toTitleCase( extend ), components[name] );
             }
 
-            instance = components[name].call( null, $el );
+            this.build( name, $el, behalf );
+        },
+
+        build : function(name, $el, behalf) {
+            var instance = components[name].call( null, $el );
+
             $el.data( '_component', instance );
+            $el.attr( 'data-cobj', true );
+            this.set( '[data-depends="' + behalf + '"]' );
         }
     };
 
